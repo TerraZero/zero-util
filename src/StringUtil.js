@@ -1,3 +1,5 @@
+const Path = require('path');
+
 /**
  * @callback StringInserter
  * @param {string} match
@@ -6,6 +8,19 @@
  */
 
 module.exports = class StringUtil {
+
+  /**
+   * @param {Object<string, import('json-query').Filter>} methods 
+   * @returns {Object<string, import('json-query').Filter>}
+   */
+  static methods(methods = {}) {
+    methods.toPascalCase = StringUtil.toPascalCase;
+    methods.pathToPascalCase = StringUtil.pathToPascalCase;
+    methods.removeExtension = StringUtil.removeExtension;
+    methods.splitPath = StringUtil.splitPath;
+    methods.ucFirst = StringUtil.ucFirst;
+    return methods;
+  }
 
   /**
    * @param {string} message
@@ -89,6 +104,41 @@ module.exports = class StringUtil {
    */
   static ucFirst(string) {
     return string.substring(0, 1).toUpperCase() + string.substring(1);
+  }
+
+  /**
+   * @param {string} path 
+   * @returns {string}
+   */
+  static removeExtension(path) {
+    path = Path.normalize(path);
+    return path.substring(0, path.length - Path.extname(path).length);
+  }
+
+  /**
+   * @param {string[]} parts 
+   * @returns {string}
+   */
+  static toPascalCase(parts) {
+    return parts
+      .map(part => part.replace(/(^\w|\b\w)/g, char => char.toUpperCase()).replace(/\W/g, ''))
+      .join('');
+  }
+
+  /**
+   * @param {string} path 
+   * @returns {string}
+   */
+  static pathToPascalCase(path) {
+    return StringUtil.toPascalCase(StringUtil.splitPath(StringUtil.removeExtension(path)));
+  }
+
+  /**
+   * @param {string} path 
+   * @returns {string[]}
+   */
+  static splitPath(path) {
+    return Path.normalize(path).split(Path.sep);
   }
 
 }

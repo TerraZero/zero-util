@@ -35,6 +35,14 @@ module.exports = class JSONUtil {
       return input;
     },
 
+    split: function(input, seperator = ' ') {
+      return input.split(seperator);
+    },
+
+    join: function(input, seperator = ' ') {
+      return input.join(seperator);
+    },
+
   };
 
   /**
