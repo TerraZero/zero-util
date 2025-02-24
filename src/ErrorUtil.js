@@ -39,12 +39,13 @@ module.exports = class ErrorUtil {
     let stack = null;
     if (error === null) {
       error = new Error();
-      stack = error.stack.split('\n');
+      stack = error.stack?.split('\n');
       stack.shift();
       stack.shift();
     } else {
-      stack = error.stack.split('\n');
+      stack = error.stack?.split('\n');
     }
+    stack ??= [];
     for (let i = 0; i < remove; i++) {
       stack.shift();
     }
@@ -59,6 +60,7 @@ module.exports = class ErrorUtil {
    * @returns {Error}
    */
   static appendStack(error, stack, title = '', connector = '--------') {
+    if (!error instanceof Error) return error;
     const newStack = this.getStack(error);
     newStack.push(connector + title + connector);
     newStack.push(...stack);
