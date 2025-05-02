@@ -7,8 +7,8 @@ module.exports = class MethodProxy {
 
       get: (target, prop) => {
         if (prop in target) return target[prop];
-        return (...args) => {
-          target.chain.push({ method: prop, args, ...target.info });
+        return (...params) => {
+          target.chain.push({ method: prop, params, ...target.info });
           return target;
         };
       },
